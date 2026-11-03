@@ -47,12 +47,12 @@ HalfAdderResult halfAdder(int a, int b){
     res.carry = nandGate(n, n);
     return res;
 }
-struct FulllAdderResult{
+struct FullAdderResult{
     int sum;
     int carry;
 };
-FulllAdderResult fullAdder(int a, int b, int cinput){
-    FulllAdderResult res;
+FullAdderResult fullAdder(int a, int b, int cinput){
+    FullAdderResult res;
     HalfAdderResult h1= halfAdder(a, b);
     HalfAdderResult h2 = halfAdder(h1.sum, cinput);
     res.sum = h2.sum;
@@ -73,7 +73,7 @@ AdderResult add4bits(fourBit a, fourBit b, int cinput){
     int carry = cinput;
 
     for(int i = 0; i < 4; i++){
-        FulllAdderResult fa = fullAdder(a.bit[i], b.bit[i], carry);
+        FullAdderResult fa = fullAdder(a.bit[i], b.bit[i], carry);
         result.sum.bit[i] = fa.sum;
         carry = fa.carry;
     }
@@ -82,7 +82,7 @@ AdderResult add4bits(fourBit a, fourBit b, int cinput){
 }
 
 bool readBits(fourBit &n, const char *name){
-    cout << "Enter " << name << " as 4 bits, least significant first (e.g. 0 1 0 1 = 5): ";
+    cout << "Enter " << name << " in 4 bits: ";
     for(int i = 3; i >= 0; i--){
         cin >> n.bit[i];
         if(!trueBit(n.bit[i])){
