@@ -33,13 +33,13 @@ int xorGate(int a, int b){
 
     return output;
 }
-struct halfAdderResult
+struct HalfAdderResult
 {
     int sum;
     int carry;
 };
-halfAdderResult halfAdder(int a, int b){
-    halfAdderResult res;
+HalfAdderResult halfAdder(int a, int b){
+    HalfAdderResult res;
     int n = nandGate(a, b);
     int x = nandGate(a, n);
     int y = nandGate(b, n);
@@ -47,21 +47,72 @@ halfAdderResult halfAdder(int a, int b){
     res.carry = nandGate(n, n);
     return res;
 }
-int main(){
-    int a, b;
-    cout << "First input(Input must be binary either 0 or 1): ";
-    cin>>a;
-    cout << "Second input(Input must be binary either 0 or 1): ";
-    cin>>b;
+struct FulllAdderResult{
+    int sum;
+    int carry;
+};
+FulllAdderResult fullAdder(int a, int b, int cinput){
+    FulllAdderResult res;
+    HalfAdderResult h1= halfAdder(a, b);
+    HalfAdderResult h2 = halfAdder(h1.sum, cinput);
+    res.sum = h2.sum;
+    res.carry = orGate(h1.carry, h2.carry);
 
-    if(trueBit(a)){
-        if(trueBit(b)){
-        //    cout << xorGate(a, b) << endl;
-        halfAdderResult r = halfAdder(a, b);
-        cout << "Sum: " << r.sum << endl << "Carry: " << r.carry << endl;
-        return 0;
+    return res;
+}
+struct fourBit{
+    int bit[4];
+};
+struct AdderResult{
+    fourBit sum;
+    int carry;
+};
+
+AdderResult add4bits(fourBit a, fourBit b, int cinput){
+    AdderResult result;
+    int carry = cinput;
+
+    for(int i = 0; i < 4; i++){
+        FulllAdderResult fa = fullAdder(a.bit[i], b.bit[i], carry);
+        result.sum.bit[i] = fa.sum;
+        carry = fa.carry;
+    }
+    result.carry = carry;
+    return result;
+}
+
+bool readBits(fourBit &n, const char *name){
+    cout << "Enter " << name << " as 4 bits, least significant first (e.g. 0 1 0 1 = 5): ";
+    for(int i = 3; i >= 0; i--){
+        cin >> n.bit[i];
+        if(!trueBit(n.bit[i])){
+            return false;
         }
     }
-cout << "Inputs must be 0 or 1" <<endl;
-return 1;
+    return true;
+}
+
+void print(fourBit n){
+    for(int i = 3; i >= 0; i--){
+        cout << n.bit[i];
+    }
+}
+
+int main(){
+    fourBit a, b;
+
+    if(!readBits(a, "A") || !readBits(b, "B")){
+        cout << "Inputs must be 0 or 1" << endl;
+        return 1;
+    }
+
+    AdderResult r = add4bits(a, b, 0);
+
+
+    cout << "Sum:";
+    print(r.sum);
+    cout << endl;
+    cout << "Carry: " << r.carry << endl;
+
+    return 0;
 }
