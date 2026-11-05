@@ -81,6 +81,56 @@ AdderResult add4bits(fourBit a, fourBit b, int cinput){
     return result;
 }
 
+AdderResult sub4bits(fourBit a, fourBit b){
+    fourBit nb;
+    for(int i = 0; i < 4; i++){
+        nb.bit[i] = notGate(b.bit[i]);
+    }
+    return add4bits(a, nb, 1);
+}
+
+struct MultiplierResult
+{
+    fourBit product;
+    int overflow;
+};
+
+MultiplierResult mul4bits(fourBit a, fourBit b){
+    int acc[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    for(int i = 0; i < 4; i++){
+        int pp[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+        for(int j = 0; j < 4; j++){
+            pp[i+j] = andGate(a.bit[j], b.bit[i]);
+       }
+       fourBit accLow, accHigh, ppLow, ppHigh;
+       for(int k = 0; k < 4; k++){
+        accLow.bit[k] = acc[k];
+        accHigh.bit[k] = acc[k+4];
+        ppLow.bit[k] = pp[k];
+        ppHigh.bit[k] = pp[k+4];
+       }
+       AdderResult low = add4bits(accLow, ppLow, 0);
+       AdderResult high = add4bits(accHigh, ppHigh, low.carry);
+
+       for(int k = 0; k < 4; k++){
+            acc[k] = low.sum.bit[k];
+            acc[k+4] = high.sum.bit[k];
+       }
+    }
+    MultiplierResult result;
+    for(int k = 0; k < 4; k++){
+        result.product.bit[k] = acc[k];
+    }
+
+    int over = acc[4];
+    over = orGate(over, acc[5]);
+    over = orGate(over, acc[6]);
+    over = orGate(over, acc[7]);
+    result.overflow = over;
+
+    return result;
+}
+
 bool readBits(fourBit &n, const char *name){
     cout << "Enter " << name << " in 4 bits: ";
     for(int i = 3; i >= 0; i--){
@@ -106,13 +156,13 @@ int main(){
         return 1;
     }
 
-    AdderResult r = add4bits(a, b, 0);
+    MultiplierResult r = mul4bits(a, b);
 
 
-    cout << "Sum:";
-    print(r.sum);
+    cout << "Product bits:";
+    print(r.product);
     cout << endl;
-    cout << "Carry: " << r.carry << endl;
+    cout << "Overflow: " << r.overflow << endl;
 
     return 0;
 }
