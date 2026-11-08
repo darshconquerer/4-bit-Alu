@@ -1,0 +1,92 @@
+body{
+    margin: 0;
+    box-sizing: border-box;
+    background: #ecf0f4;
+    color: rgb(16, 16, 16);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+main{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+h1{
+    font-size: 30px;
+    margin: 0 0 4px 0;
+}
+h2{
+    font-size: 20px;
+    margin: 0 0 8px 0;
+}
+p{
+    margin: 0 0 10px 0;
+}
+a{
+    color: rgb(0, 0, 255);
+}
+.sub{
+    color: rgb(146, 145, 145);
+}
+.card{
+    background: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+.ops{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.ops button{
+    flex: 1;
+    padding: 10px;
+    border: 1px solid rgb(237, 235, 235);
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+.ops[aria-pressed = "treu"]{
+    background: blue;
+    border-color: blue;
+    color: white;
+}
+.row{
+    display: flex;
+    gap: 14px;
+}
+.field{
+    flex: 1;
+}
+label{
+    display: block;
+    font-size: 14px;
+    color: rgb(179, 179, 179);
+    margin-bottom: 4px;
+}
+input{
+    width: 100%;
+    padding: 10px;
+    font-size: 22px;
+    font-family: monospace;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+}
+.bits{
+    font-family: monospace;
+    color: gray;
+    margin: 4px 0 0 0 ;
+    min-height: 24px;
+}
+.err{
+    color: rgb(250, 138, 0);
+    min-height: 24px;
+}
+
+
