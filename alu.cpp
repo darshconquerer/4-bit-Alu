@@ -1,6 +1,3 @@
-#include <iostream>
-using namespace std;
-
 int nandGate(int a , int b){
     int table[2][2] = {{1, 1}, {1, 0}};
     return table[a][b];
@@ -12,6 +9,7 @@ bool trueBit(int a){
 
     return false;
 }
+
 int notGate(int a){
     return nandGate(a, a);
 }
@@ -89,14 +87,13 @@ AdderResult sub4bits(fourBit a, fourBit b){
     return add4bits(a, nb, 1);
 }
 
-struct MultiplierResult
+struct eightBit
 {
-    fourBit product;
-    int overflow;
+    int bit[8];
 };
 
-MultiplierResult mul4bits(fourBit a, fourBit b){
-    int acc[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+eightBit mul4bits(fourBit a, fourBit b){
+    eightBit acc= {{0, 0, 0, 0, 0, 0, 0, 0}};
     for(int i = 0; i < 4; i++){
         int pp[8] = {0, 0, 0, 0, 0, 0, 0, 0};
         for(int j = 0; j < 4; j++){
@@ -104,8 +101,8 @@ MultiplierResult mul4bits(fourBit a, fourBit b){
        }
        fourBit accLow, accHigh, ppLow, ppHigh;
        for(int k = 0; k < 4; k++){
-        accLow.bit[k] = acc[k];
-        accHigh.bit[k] = acc[k+4];
+        accLow.bit[k] = acc.bit[k];
+        accHigh.bit[k] = acc.bit[k+4];
         ppLow.bit[k] = pp[k];
         ppHigh.bit[k] = pp[k+4];
        }
@@ -113,56 +110,101 @@ MultiplierResult mul4bits(fourBit a, fourBit b){
        AdderResult high = add4bits(accHigh, ppHigh, low.carry);
 
        for(int k = 0; k < 4; k++){
-            acc[k] = low.sum.bit[k];
-            acc[k+4] = high.sum.bit[k];
+            acc.bit[k] = low.sum.bit[k];
+            acc.bit[k+4] = high.sum.bit[k];
        }
     }
-    MultiplierResult result;
-    for(int k = 0; k < 4; k++){
-        result.product.bit[k] = acc[k];
-    }
-
-    int over = acc[4];
-    over = orGate(over, acc[5]);
-    over = orGate(over, acc[6]);
-    over = orGate(over, acc[7]);
-    result.overflow = over;
-
-    return result;
+    return acc;
 }
 
-bool readBits(fourBit &n, const char *name){
-    cout << "Enter " << name << " in 4 bits: ";
+void toBits(int n, fourBit &b){
+    for(int i = 0; i < 4; i++){
+        b.bit[i] = n%2;
+        n = n/2;
+    }
+}
+
+int toInt(fourBit n)
+{
+    int value = 0;
     for(int i = 3; i >= 0; i--){
-        cin >> n.bit[i];
-        if(!trueBit(n.bit[i])){
-            return false;
-        }
+        value = value * 2 + n.bit[i];
     }
-    return true;
+    return value;
 }
 
-void print(fourBit n){
-    for(int i = 3; i >= 0; i--){
-        cout << n.bit[i];
+int toInt8(eightBit n)
+{
+    int value = 0;
+    for(int i = 7; i >= 0; i--){
+        value = value * 2 + n.bit[i];
     }
+    return value;
 }
 
-int main(){
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#define EXPORT extern "C" EMSCRIPTEN_KEEPALIVE
+#else
+#define EXPORT extern "C"
+#endif
+
+int packBits(const int *bits, int n){
+    int v = 0;
+    for(int i = n - 1; i >= 0; i--){
+        v = v*2 + bits[i];
+    }
+    return v;
+}
+bool validInput(int a , int b){
+    return a >= 0 && a <= 15 && b >= 0 && b <= 15;
+}
+
+EXPORT int alu_bits(int op, int x, int y){
+    if(!validInput(x, y)) return -1;
     fourBit a, b;
+    toBits(x, a);
+    toBits(y, b);
 
-    if(!readBits(a, "A") || !readBits(b, "B")){
-        cout << "Inputs must be 0 or 1" << endl;
-        return 1;
+    if(op == 0){
+        AdderResult r = add4bits(a, b, 0);
+        int bits[5] = {r.sum.bit[0], r.sum.bit[1], r.sum.bit[2], r.sum.bit[3], r.carry};
+        return packBits(bits, 5);
     }
+    if(op == 1){
+        AdderResult r = sub4bits(a, b);
+        return packBits(r.sum.bit, 4);
+    }
+    eightBit p = mul4bits(a, b);
+    return packBits(p.bit, 8);
+}
 
-    MultiplierResult r = mul4bits(a, b);
+EXPORT int alu_value(int op, int x, int y){
+    if(!validInput(x, y)) return -1;
+    fourBit a, b;
+    toBits(x, a);
+    toBits(y, b);
 
+    if(op == 0){
+        AdderResult r = add4bits(a, b, 0);
+        return toInt(r.sum) + r.carry * 16;
+    }
+    if(op == 1){
+        AdderResult r = sub4bits(a, b);
+        if(r.carry == 0){
+            return toInt(r.sum) - 16;
+        }
+        return toInt(r.sum);
 
-    cout << "Product bits:";
-    print(r.product);
-    cout << endl;
-    cout << "Overflow: " << r.overflow << endl;
+    }
+    return toInt8(mul4bits(a, b));
+}
+EXPORT int alu_borrow(int x, int y){
+    if(!validInput(x, y)) return -1;
+    fourBit a, b;
+    toBits(x, a);
+    toBits(y, b);
 
-    return 0;
+    AdderResult r = sub4bits(a, b);
+    return notGate(r.carry);
 }
