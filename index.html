@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4-bit ALU</title>
+</head>
+<body>
+    <main>
+        <section id = "calculatorPage">
+            <h1>4-bit ALU</h1>
+            <p class="sub">Type Two numbers from 0 to 15. They become 4-bit binary and run through logic gates build from NAND only</p>
+            <div class="card">
+                <div class="ops" role="group" aria-label="Operation">
+                    <button data-operation="add" aria-label = "true">Add</button>
+                    <button data-operation="add" aria-label = "false">Subtract</button>
+                    <button data-operation="add" aria-label = "false">Multiply</button>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label for="numberAInput">Number A</label>
+                        <input id="numberAInput" type="number" autocomplete="off">
+                        <div class="bits" id = "numberABinary"></div>
+                    </div>
+                    <div class="field">
+                        <label for="numberBInput">Number B</label>
+                        <input id="numberBInput" type="number" autocomplete="off">
+                        <div class="bits" id = "numberBBinary"></div>
+                    </div>
+                </div>
+                <p class="err" id="errorMesssage" role="alert"></p>
+            </div>
+            <div class="card" aria-live = "polite">
+                <h2 id="resultTitle">Result</h2>
+                <div class="smileys" id="smileyRow"></div>
+                <div class="res">
+                    <div>
+                        <label>Integer</label>
+                        <div class="big" id="resultInteger"></div>
+                    </div>
+                    <div>
+                        <label>Binary</label>
+                        <div class="mono" id="resultBinary"></div>
+                    </div>              
+                </div>
+                <p class="note" id="resultNote"></p>
+            </div>
+            <p><a href="#backend">What's happening on the backend</a></p>
+        </section>
+        <section id = "backendPage" hidden>
+            <p><a href="#">Back to ALU</a></p>
+            <h1>What's happening on the backend</h1>
+            <p class="sub">Every calculation is just a circuit on logic gates. The small circuots on the right side of adder and subtractor show how logic gates like AND, OR, XOR and NOT and built using universal NAND gate</p>
+            <div class="card">
+                <h2>Adder</h2>
+                <figure>
+                    <div class="scroll"><img src="assets/Adder 4-bit.png" alt="4-bit adder"></div>
+                    <figcaption>Four adder stages, least significant bit at the top</figcaption>
+                </figure>
+                <p>Each stage adds one column of A and B just like using pen paper</p>
+                <ul>
+                    <li>An XOR of the two input bits give the sum bit (1 + 1 gives 0 here)</li>
+                    <li>An  AND of the same two bits give the carry</li>
+                    <li>A second full adder takes input into its XOR and AND. The half adder inside the full adder takes input from XOR of first half adder and from the carry of first adder on top of the section. The AND gate from both half adders feed into OR gate giving next carry</li>
+                    <li>That carry feeds the next stage, so it ripples through all four</li>
+                </ul>
+                <p>The lamps show four sum bits plus final carry, whih can be taken as fifth bit. The biggest case is 15+15 = 30 i.e; <code>11110</code>, this way we can takle overflows.</p>
+            </div>
+
+            <div class="card">
+                <h2>Subtractor</h2>
+                <figure>
+                    <div class="scroll"><img src="assets/Subtractor 4-bit.png" alt="4-bit Subtractor"></div>
+                    <figcaption>Almost same as adder with first stage as full adder that takes 1 as a carry always and NOT gates before every B input</figcaption>
+                </figure>
+                <p>Subtracting circuit is not too different as the rule is <code>A - B = A + NOT(B) + 1</code></p>
+                <ul>
+                    <li>A NOT gates flips input B</li>
+                    <li>The fixed <code>1</code> at the top goes in as first carry(Makes up for operation being 15 - B and not 16 - B)</li>
+                    <li>The flipped B and A go through adder stages</li>
+                </ul>
+                <p>The extra lamp(Carry-Over) tells you what happened. ON means A > B, so four bits are the answer. OFF means A < B, so there is a borrow and answer is negative.
+                    Then page shows the four bits minus 16.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>Multiplier</h2>
+                <figure>
+                    <div class="scroll"><img src="assets/Multiplier 4-bit.png" alt="4-bit Multiplier"></div>
+                    <figcaption>A grid of 16 AND Gates at the top, adders below.</figcaption>
+                </figure>
+                <p>Binary multiplication is shift and add like we do on paper</p>
+                <ul>
+                    <li>Each bit of A is fed to AND with B as second input bit. That makes 16 partial products, arranged as four shifted rows</li>
+                    <li>The adders below add the four rows together column by column, passing carries along.</li>
+                </ul>
+                <p>Two 4-bits number can make up to 8-bits and the multiplier has lamp for each one, so even 15*15 won't overflow.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="alu.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
