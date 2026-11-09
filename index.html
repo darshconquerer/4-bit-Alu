@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4-bit ALU</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main>
         <section id = "calculatorPage">
             <h1>4-bit ALU</h1>
-            <p class="sub">Type Two numbers from 0 to 15. They become 4-bit binary and run through logic gates build from NAND only</p>
-            <div class="card">
+<p class="sub">Type two numbers from 0 to 15. They become 4-bit binary and run through logic gates built from NAND only. <a href="https://github.com/darshconquerer/4-bit-Alu/blob/main/alu.cpp" target="_blank" rel="noopener">Click to see logic</a></p>            <div class="card">
                 <div class="ops" role="group" aria-label="Operation">
                     <button data-operation="add" aria-label = "true">Add</button>
-                    <button data-operation="add" aria-label = "false">Subtract</button>
-                    <button data-operation="add" aria-label = "false">Multiply</button>
+                    <button data-operation="subtract" aria-label = "false">Subtract</button>
+                    <button data-operation="multiply" aria-label = "false">Multiply</button>
                 </div>
                 <div class="row">
                     <div class="field">
@@ -28,7 +28,7 @@
                         <div class="bits" id = "numberBBinary"></div>
                     </div>
                 </div>
-                <p class="err" id="errorMesssage" role="alert"></p>
+                <p class="err" id="errorMessage" role="alert"></p>
             </div>
             <div class="card" aria-live = "polite">
                 <h2 id="resultTitle">Result</h2>
@@ -64,7 +64,7 @@
                     <li>A second full adder takes input into its XOR and AND. The half adder inside the full adder takes input from XOR of first half adder and from the carry of first adder on top of the section. The AND gate from both half adders feed into OR gate giving next carry</li>
                     <li>That carry feeds the next stage, so it ripples through all four</li>
                 </ul>
-                <p>The lamps show four sum bits plus final carry, whih can be taken as fifth bit. The biggest case is 15+15 = 30 i.e; <code>11110</code>, this way we can takle overflows.</p>
+                <p>The lamps show four sum bits plus final carry, whih can be taken as fifth bit. The biggest case is 15+15 = 30 i.e; <code>11110</code>, this way we can tackle overflows.</p>
             </div>
 
             <div class="card">
