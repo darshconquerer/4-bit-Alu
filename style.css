@@ -32,6 +32,9 @@ a{
     color: white;
     font-weight: bold;
 }
+.back{
+    color: blue;
+}
 .sub{
     color: lightgray;
     margin-bottom: 20px;
