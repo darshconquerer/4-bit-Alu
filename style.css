@@ -1,8 +1,8 @@
 body{
     margin: 0;
     box-sizing: border-box;
-    background: #ecf0f4;
-    color: rgb(16, 16, 16);
+    background: black;
+    color: white;
     font-family: Arial, sans-serif;
     font-size: 16px;
     line-height: 1.5;
@@ -25,14 +25,16 @@ p{
     margin: 0 0 10px 0;
 }
 a{
-    color: rgb(0, 0, 255);
+    color: white;
+    font-weight: bold;
 }
 .sub{
-    color: rgb(146, 145, 145);
+    color: lightgray;
+    margin-bottom: 20px;
 }
 .card{
-    background: white;
-    border: 1px solid black;
+    background:black;
+    border: 1px solid white;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 18px;
@@ -45,17 +47,18 @@ a{
 .ops button{
     flex: 1;
     padding: 10px;
-    border: 1px solid rgb(237, 235, 235);
-    background-color: white;
+    border: 1px solid blue;
+    background: black;
+    color: white;
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
 }
 .ops button[aria-pressed = "true"]{
-    background: black;
-    border:2px solid blue;
-    color: white;
+    background: white;
+    border:2px solid cyan;
+    color: black;
 }
 .row{
     display: flex;
@@ -68,7 +71,7 @@ a{
 label{
     display: block;
     font-size: 14px;
-    color: rgb(179, 179, 179);
+    color: lightgray;
     margin-bottom: 4px;
 }
 input{
@@ -76,18 +79,21 @@ input{
     padding: 10px;
     font-size: 22px;
     font-family: monospace;
-    border: 1px solid lightgray;
+    border: 1px solid white;
+    background: black;
+    color: white;
     border-radius: 8px;
 }
 .bits{
     font-family: monospace;
-    color: gray;
+    color: lightgray;
     margin: 4px 0 0 0 ;
     min-height: 24px;
 }
 .err{
-    color: rgb(250, 138, 0);
+    color: white;
     min-height: 24px;
+    font-weight: bold;
 }
 .smileys{
     display: flex;
@@ -106,7 +112,6 @@ input{
 }
 .sm.off span{
     opacity: 0.5;
-    filter: grayscale(1);
 }
 .res{
     display: flex;
@@ -124,16 +129,17 @@ input{
     font-family: monospace;
 }
 .note{
-    color: gray;
+    color: lightgrey;
     font-size: 15px;
     margin-top: 8px;
 }
 .warn{
-    color: rgb(241, 141, 19);
+    color: white;
+    font-weight: bold;
 }
 .scroll{
     overflow-x: auto;
-    border: 1px solid lightgray;
+    border: 1px solid white;
     border-radius: 8px;
     background: #dadada;
 }
@@ -149,16 +155,17 @@ input{
 }
 figcaption{
     font-size: 14px;
-    color: gray;
+    color: lightgray;
     margin-top: 4px;
 }
 ul{
     padding: 0 0 0 20px;
 }
 code{
-    background: lightgrey;
+    background: darkgrey;
     padding: 1px 5px;
     border-radius: 4px;
+    color: white;
     font-family: monospace;
 }
 [hidden]{
