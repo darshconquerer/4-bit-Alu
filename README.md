@@ -32,19 +32,7 @@ Using Github Pages
 
 ## Project structure
 
-4-bit Alu/
-   ├── index.html
-   ├── style.css
-   ├── script.js
-   ├── alu.cpp
-   ├── README.md
-   └── assets/
-       ├── Adder_4-bit.png
-       ├── Subtractor_4-bit.png
-       ├── Multiplier_4-bit.png
-       ├── hidden.png
-       ├── front.png
-       └── multiplier.png
+<img width="289" height="338" alt="image" src="https://github.com/user-attachments/assets/880fc40d-6ef8-4f6f-87e8-4fb9bcbd05cf" />
 
 ## What I learned
 
